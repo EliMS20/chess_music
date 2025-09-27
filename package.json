@@ -1,0 +1,26 @@
+{
+  "name": "chess_music",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EliMS20/chess_music.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EliMS20/chess_music/issues"
+  },
+  "homepage": "https://github.com/EliMS20/chess_music#readme",
+  "dependencies": {
+    "chess.js": "^1.4.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.16.0"
+  }
+}
