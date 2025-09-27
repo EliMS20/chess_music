@@ -146,13 +146,6 @@ function analyzeMove(move) {
 // updateIntensity(){}
 // //If 1, en passant, if 2 promotion, other numbers- other effects
 // Actions(){}
-<div id="player"></div>
-<input type="range" id="volumeSlider" min="0" max="100" value="50">
-
-<script src="https://www.youtube.com/iframe_api"></script>
-<script>
-let player;
-
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
     height: '360',
@@ -170,4 +163,3 @@ function onPlayerReady(event) {
     player.setVolume(slider.value); // 0–100
   });
 }
-</script>
