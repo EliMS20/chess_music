@@ -10,24 +10,26 @@
 			<script src="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.js"
         integrity="sha384-/KwQCjA1GWovZNV3QDVtvSMDzO4reGgarF/RqHipr7hIUElH3r5zNl9WEPPOBRIF"
         crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	</head>
 	<body>
 		<div id="board2"></div>
-		<script type="module">
-		  import { Chess } from 'node_modules/chess.js'
-		</script>
+
 		<script> 
 		const game = new Chess();
 
 		const board = Chessboard2('board2', {
 			draggable: true,
 			position: "start",
-			dropOffBoard: 'snapback',
 			showNotation: true
 		});
 
-		board.flip(); // to flip the board around
-		
+		while (!chess.isGameOver()) {
+		  const moves = chess.moves()
+		  const move = moves[Math.floor(Math.random() * moves.length)]
+		  chess.move(move)
+		  board.position(chess.fen())
+		}		
 		// board.move('e2-e4', 'g8-f6');
 		</script>
 	</body>
