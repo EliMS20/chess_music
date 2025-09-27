@@ -148,8 +148,8 @@ function analyzeMove(move) {
 // Actions(){}
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
-    height: '360',
-    width: '640',
+    height: '0',
+    width: '0',
     videoId: 'M7lc1UVf-VE', // Replace with your video ID
     events: { 'onReady': onPlayerReady }
   });
