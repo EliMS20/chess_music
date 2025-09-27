@@ -34,14 +34,14 @@
 				<a class="btn btn-ghost text-xl">♟️ Chess Game</a>
 			</div>
 			<div class="flex-1 flex justify-center">
-				<button class="btn btn-secondary">New Game</button>
+				<button class="btn btn-secondary" id="newGameBtn" onclick="resetGame()">New Game</button>
 			</div>
 			<div class="flex-1">
 			</div>
 			<div class="pr-4">
 			<label class="swap">
 				<!-- this hidden checkbox controls the state -->
-				<input type="checkbox" />
+				<input type="checkbox" id="volumeToggle" />
 			  
 				<!-- volume on icon -->
 				<svg
@@ -82,6 +82,8 @@
 			</div>
 		</main>
 		
+		<!-- Music System -->
+		<script src="music.js"></script>
 		<!-- Your custom logic -->
 		<script src="logic.js"></script>
 	</body>
