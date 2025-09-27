@@ -6,6 +6,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Chess Board</title>
 		
+		<!-- Tailwind CSS -->
+		<script src="https://cdn.tailwindcss.com"></script>
+		<!-- DaisyUI -->
+		<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+		
 		<!-- Chessboard2 CSS -->
 		<link rel="stylesheet"
       href="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css"
@@ -21,9 +26,34 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" 
 		integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" 
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	
 	</head>
-	<body>
-		<div id="board2" style="width: 750px; margin: 0 auto;"></div>
+	<body class="bg-base-200 min-h-screen">
+		<div class="navbar bg-primary text-primary-content shadow-lg">
+			<div class="flex-1">
+				<a class="btn btn-ghost text-xl">♟️ Chess Game</a>
+			</div>
+			<div class="flex-none">
+				<button class="btn btn-secondary">New Game</button>
+				<button class="btn btn-ghost btn-circle">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+				</button>
+			</div>
+		</div>
+		
+		<main class="container mx-auto py-8 px-4">
+			<div class="card bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title justify-center text-2xl mb-4">Chess Board</h2>
+					<div id="board2" style="width: 750px; margin: 0 auto;" class="shadow-2xl rounded-lg overflow-hidden"></div>
+					<div class="card-actions justify-center mt-4">
+						<button class="btn btn-primary">Undo Move</button>
+						<button class="btn btn-outline">Reset Game</button>
+						<button class="btn btn-accent">Save Game</button>
+					</div>
+				</div>
+			</div>
+		</main>
 		
 		<!-- Your custom logic -->
 		<script src="logic.js"></script>
