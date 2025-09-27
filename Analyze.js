@@ -12,7 +12,7 @@ async function analyzePosition(fen) {
         let score = pv.cp;
         console.log("Evaluation:", score / 100.0, "pawns");
         //Music changes based on score, eg for low eval/blunder
-        updateMusic(score);
+        updateMusic(score); // find better way too change music
         //Higher score means more intensity
         updateIntensity(score / 9);
       } else if ("mate" in pv) {
@@ -52,12 +52,24 @@ function analyzeMove(move) {
   if (game.in_checkmate()) intensity += 10;
   else if (move.san.includes('+')) intensity += 4;
   else if (move.flags.includes('c')) intensity += 3;
+// For forks
+  let forkTargets = 0;
 
+  const moves = game.moves({ square: move.to, verbose: true });
+  for (let m of moves) {
+    if (m.captured) {
+      forkTargets += pieceValues[m.captured] || 0;
+    }
+  }
+  if (forkTargets >= 2) Actions(4);
+///
 
-  if (move.captured) intensity += pieceValues[move.captured/2];
+  if (move.captured) intensity += (pieceValues[move.captured] / 2);
 
-  if (move.flags.includes('e')) Action(1);   // en passant
-  if (move.flags.includes('p')) Action(2);  // promotion
+  
+  if (move.flags.includes('b')) Actions(3);
+  if (move.flags.includes('e')) Actions(1);   // en passant
+  if (move.flags.includes('p')) Actions(2);  // promotion
 
   // Save to Firebase
   // firebase.database().ref('game/intensity').push(intensity);
@@ -71,4 +83,4 @@ updateMusic(){}
 // For intensity, if between 3 and 6 we subtract//// or we subtract 5 from total score, but if below certain point we actually increment
 updateIntensity(){}
 //If 1, en passant, if 2 promotion, other numbers- other effects
-Action(){}
+Actions(){}
