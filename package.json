@@ -21,6 +21,8 @@
     "chess.js": "^1.4.0"
   },
   "devDependencies": {
-    "parcel": "^2.16.0"
+    "daisyui": "^5.1.24",
+    "parcel": "^2.16.0",
+    "tailwindcss": "^4.1.13"
   }
 }

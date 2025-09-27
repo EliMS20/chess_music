@@ -48,7 +48,13 @@ function onDrop (dropEvt) {
 
   // make the move if it is legal
   if (move) {
-    board.fen(game.fen());
+    // update the board position with the new game position, then update status DOM elements
+    board.fen(game.fen())
+    
+    // Update music system with the move
+    if (window.updateMusicFromMove) {
+      window.updateMusicFromMove(move);
+    }
 	// analyzeMove(move);
 	analyzePosition(game.fen());
   } else {
@@ -95,19 +101,53 @@ async function analyzePosition(fen) {
   }
 }
 
-// On chessboard move drop
-/*function onDrop(source, target) {
-  let move = game.move({ from: source, to: target });
-  if (move === null) return 'snapback'; // illegal move
 
-  // Sync board
-  board.position(game.fen());
-
-  analyzePosition(game.fen());
-  analyzeMove(move);
+// Reset game to starting position
+function resetGame() {
+  console.log('resetGame function called')
+  
+  // Reset the chess game to starting position
+  game.reset()
+  console.log('Chess game reset, FEN:', game.fen())
+  
+  // Update the board to show starting position
+  board.position(game.fen())
+  console.log('Board position updated')
+  
+  // Clear any circles from the board
+  board.clearCircles()
+  console.log('Board circles cleared')
+  
+  // Update status display
+  updateStatus()
+  console.log('Status updated')
+  
+  // Reset music system if it exists
+  if (window.resetMusicSystem && typeof window.resetMusicSystem === 'function') {
+    console.log('Resetting music system')
+    window.resetMusicSystem()
+  } else {
+    console.log('Music system reset function not found')
+  }
+  
+  console.log('Game reset to starting position completed')
 }
 
-*/
+// Make resetGame available globally and attach to button
+document.addEventListener('DOMContentLoaded', function() {
+  // Attach reset function to the New Game button
+  const newGameBtn = document.getElementById('newGameBtn')
+  if (newGameBtn) {
+    newGameBtn.addEventListener('click', resetGame)
+    console.log('New Game button event listener attached')
+  } else {
+    console.log('New Game button not found')
+  }
+  
+  // Make function globally available
+  window.resetGame = resetGame
+})
+
 function analyzeMove(move) {
   let intensity = 0;
   let emp = 0;

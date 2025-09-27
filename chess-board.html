@@ -6,6 +6,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Chess Board</title>
 		
+		<!-- Tailwind CSS -->
+		<script src="https://cdn.tailwindcss.com"></script>
+		<!-- DaisyUI -->
+		<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+		
 		<!-- Chessboard2 CSS -->
 		<link rel="stylesheet"
       href="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css"
@@ -21,10 +26,64 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" 
 		integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" 
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	
 	</head>
-	<body>
-		<div id="board2" style="width: 750px; margin: 0 auto;"></div>
+	<body class="bg-base-200 min-h-screen">
+		<div class="navbar bg-primary text-primary-content shadow-lg">
+			<div class="flex-1">
+				<a class="btn btn-ghost text-xl">♟️ Chess Game</a>
+			</div>
+			<div class="flex-1 flex justify-center">
+				<button class="btn btn-secondary" id="newGameBtn" onclick="resetGame()">New Game</button>
+			</div>
+			<div class="flex-1">
+			</div>
+			<div class="pr-4">
+			<label class="swap">
+				<!-- this hidden checkbox controls the state -->
+				<input type="checkbox" id="volumeToggle" />
+			  
+				<!-- volume on icon -->
+				<svg
+				  class="swap-on fill-current"
+				  xmlns="http://www.w3.org/2000/svg"
+				  width="48"
+				  height="48"
+				  viewBox="0 0 24 24">
+				  <path
+					d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+				</svg>
+			  
+				<!-- volume off icon -->
+				<svg
+				  class="swap-off fill-current"
+				  xmlns="http://www.w3.org/2000/svg"
+				  width="48"
+				  height="48"
+				  viewBox="0 0 24 24">
+				  <path
+					d="M3,9H7L12,4V20L7,15H3V9M16.59,12L14,9.41L15.41,8L18,10.59L20.59,8L22,9.41L19.41,12L22,14.59L20.59,16L18,13.41L15.41,16L14,14.59L16.59,12Z" />
+				</svg>
+			  </label>
+			</div>
+		</div>
 		
+		<main class="container mx-auto py-8 px-4">
+			<div class="card bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title justify-center text-2xl mb-4">Chess Board</h2>
+					<div id="board2" style="width: 750px; margin: 0 auto;" class="shadow-2xl rounded-lg overflow-hidden"></div>
+					<!-- <div class="card-actions justify-center mt-4">
+						<button class="btn btn-primary">Undo Move</button>
+						<button class="btn btn-outline">Reset Game</button>
+						<button class="btn btn-accent">Save Game</button>
+					</div> -->
+				</div>
+			</div>
+		</main>
+		
+		<!-- Music System -->
+		<script src="music.js"></script>
 		<!-- Your custom logic -->
 		<script src="logic.js"></script>
 	</body>
