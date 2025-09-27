@@ -146,3 +146,28 @@ function analyzeMove(move) {
 // updateIntensity(){}
 // //If 1, en passant, if 2 promotion, other numbers- other effects
 // Actions(){}
+<div id="player"></div>
+<input type="range" id="volumeSlider" min="0" max="100" value="50">
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+let player;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    height: '360',
+    width: '640',
+    videoId: 'M7lc1UVf-VE', // Replace with your video ID
+    events: { 'onReady': onPlayerReady }
+  });
+}
+
+function onPlayerReady(event) {
+  event.target.playVideo();
+
+  const slider = document.getElementById('volumeSlider');
+  slider.addEventListener('input', () => {
+    player.setVolume(slider.value); // 0–100
+  });
+}
+</script>
