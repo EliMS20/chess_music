@@ -1,34 +1,34 @@
-const stockfish = new Worker("stockfish.js");
+// Analyze current FEN using Lichess Cloud Eval API
+async function analyzePosition(fen) {
+  try {
+    const url = `https://lichess.org/api/cloud-eval?fen=${encodeURIComponent(fen)}&multiPv=1`;
+    const response = await fetch(url);
+    const data = await response.json();
 
-stockfish.onmessage = function(event) {
-  let line = event.data;
-
-  if (line.includes("info depth")) {
-    let match = line.match(/score (\w+) (-?\d+)/);
-    if (match) {
-      let type = match[1];
-      let value = parseInt(match[2], 10);
-
-      if (type === "cp") {
-      
-
-        let score = value; 
-        console.log("Evaluation:", score / 100.0);
-        updateMusic(score);
-        updateIntensity(score / 9);
+    if (data.pvs && data.pvs[0]) {
+      const pv = data.pvs[0];
+      if ("cp" in pv) {
         
-        //updateMusic, then based on the score plays music
-        //Alongside music there will be specific sound effects for blunder (Below 25), etc 
-        //intensity is volume + speed
-      } else if (type === "mate") {
-        console.log("Mate in", value);
-        updateIntensity(100); // extreme intensity
-        updateSpeed(100);
+        let score = pv.cp;
+        console.log("Evaluation:", score / 100.0, "pawns");
+        //Music changes based on score, eg for low eval/blunder
+        updateMusic(score);
+        //Higher score means more intensity
+        updateIntensity(score / 9);
+      } else if ("mate" in pv) {
+        // mate = forced mate in X
+        console.log("Mate in", pv.mate);
+        //Intensity- volume + speed
+        updateIntensity(100/pv.mate);
+     
       }
     }
+  } catch (err) {
+    console.error("Error analyzing position:", err);
   }
-};
+}
 
+// On chessboard move drop
 function onDrop(source, target) {
   let move = game.move({ from: source, to: target });
   if (move === null) return 'snapback'; // illegal move
@@ -36,14 +36,12 @@ function onDrop(source, target) {
   // Sync board
   board.position(game.fen());
 
-  // Send current position to Stockfish
-  stockfish.postMessage("uci");
-  stockfish.postMessage("ucinewgame");
-  stockfish.postMessage("position fen " + game.fen());
-  stockfish.postMessage("go depth 10"); // depth 10 for quick analysis
+  analyzePosition(game.fen());
+  analyzeMove(move);
 }
+
+
 function analyzeMove(move) {
-  
   let intensity = 0;
   let emp = 0;
   let prom = 0;
@@ -53,19 +51,21 @@ function analyzeMove(move) {
 
   if (game.in_checkmate()) intensity += 10;
   else if (move.san.includes('+')) intensity += 5;
-  else if (move.flags.includes('c')) intensity += 2; 
+  else if (move.flags.includes('c')) intensity += 2;
   else {
     if (intensity > 0) intensity -= 1;
   }
+
   if (move.captured) intensity += pieceValues[move.captured];
 
-  if move.flags.includes('e')) emp += 1;
-  if move.flags.includes('p')) prom += 1;
+  if (move.flags.includes('e')) emp += 1;   // en passant
+  if (move.flags.includes('p')) prom += 1;  // promotion
 
-// The intensity and other values are UPDATED by this amount
-// Unless it is a specific action, then that triggers sound effect ONCE
+  // Save to Firebase
+  firebase.database().ref('game/intensity').push(intensity);
+
+  // Trigger effects, enpassant and promoted play action, intensity updates the intensity value by incrementing
   promotedAction(prom);
   enpassantAction(emp);
-  updateIntensity(intensity);
-
+  updateIntensity(intensity);  
 }
