@@ -136,7 +136,7 @@ async function analyzePosition(fen) {
 }
 
 // On chessboard move drop
-function onDrop(source, target) {
+/*function onDrop(source, target) {
   let move = game.move({ from: source, to: target });
   if (move === null) return 'snapback'; // illegal move
 
@@ -147,7 +147,7 @@ function onDrop(source, target) {
   analyzeMove(move);
 }
 
-
+*/
 function analyzeMove(move) {
   let intensity = 0;
   let emp = 0;
