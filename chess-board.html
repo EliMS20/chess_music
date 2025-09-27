@@ -25,6 +25,7 @@
 			onDrop: function(source, target, piece) {
 				// Try to make the move using chess.js
 				const move = game.move({ from: source, to: target, promotion: 'q' });
+				console.log(move);
 				if (move === null) {
 					// Illegal move, snapback
 					console.log('Illegal move: ' + source + ' to ' + target);
@@ -33,6 +34,7 @@
 					// Legal move, update board
 					board.position(game.fen());
 					updateStatus();
+					// No return needed for legal moves
 				}
 			}
 		});
