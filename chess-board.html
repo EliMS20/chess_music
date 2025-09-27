@@ -15,22 +15,52 @@
 	<body>
 		<div id="board2" style="width: 750px; margin: 0 auto;"></div>
 
-		<script> 
+		<script>
 		const game = new Chess();
 
 		const board = Chessboard2('board2', {
 			draggable: true,
 			position: "start",
-			showNotation: true
+			showNotation: true,
+			onDrop: function(source, target, piece) {
+				// Try to make the move using chess.js
+				const move = game.move({ from: source, to: target, promotion: 'q' });
+				if (move === null) {
+					// Illegal move, snapback
+					console.log('Illegal move: ' + source + ' to ' + target);
+					return 'snapback';
+				} else {
+					// Legal move, update board
+					board.position(game.fen());
+					updateStatus();
+				}
+			}
 		});
 
-		while (!chess.isGameOver()) {
-		  const moves = chess.moves()
-		  const move = moves[Math.floor(Math.random() * moves.length)]
-		  chess.move(move)
-		  board.position(chess.fen())
-		}		
-		// board.move('e2-e4', 'g8-f6');
+		function updateStatus() {
+			let status = '';
+			if (game.in_checkmate()) {
+				status = 'Game over, ' + (game.turn() === 'w' ? 'Black' : 'White') + ' wins by checkmate!';
+			} else if (game.in_draw()) {
+				status = 'Game over, drawn position.';
+			} else {
+				status = (game.turn() === 'w' ? 'White' : 'Black') + ' to move';
+				if (game.in_check()) {
+					status += ', ' + (game.turn() === 'w' ? 'White' : 'Black') + ' is in check!';
+				}
+			}
+			document.getElementById('status').textContent = status;
+		}
+
+		// Add a status display below the board
+		document.addEventListener('DOMContentLoaded', function() {
+			const statusDiv = document.createElement('div');
+			statusDiv.id = 'status';
+			statusDiv.style.textAlign = 'center';
+			statusDiv.style.marginTop = '20px';
+			document.body.appendChild(statusDiv);
+			updateStatus();
+		});
 		</script>
 	</body>
 </html>
