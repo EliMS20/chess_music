@@ -50,22 +50,25 @@ function analyzeMove(move) {
   intensity += pieceValues[move.piece] || 0;
 
   if (game.in_checkmate()) intensity += 10;
-  else if (move.san.includes('+')) intensity += 5;
-  else if (move.flags.includes('c')) intensity += 2;
-  else {
-    if (intensity > 0) intensity -= 1;
-  }
+  else if (move.san.includes('+')) intensity += 4;
+  else if (move.flags.includes('c')) intensity += 3;
 
-  if (move.captured) intensity += pieceValues[move.captured];
 
-  if (move.flags.includes('e')) emp += 1;   // en passant
-  if (move.flags.includes('p')) prom += 1;  // promotion
+  if (move.captured) intensity += pieceValues[move.captured/2];
+
+  if (move.flags.includes('e')) Action(1);   // en passant
+  if (move.flags.includes('p')) Action(2);  // promotion
 
   // Save to Firebase
-  firebase.database().ref('game/intensity').push(intensity);
+  // firebase.database().ref('game/intensity').push(intensity);
 
   // Trigger effects, enpassant and promoted play action, intensity updates the intensity value by incrementing
-  promotedAction(prom);
-  enpassantAction(emp);
+
   updateIntensity(intensity);  
 }
+//certain game states, it should change
+updateMusic(){}
+// For intensity, if between 3 and 6 we subtract//// or we subtract 5 from total score, but if below certain point we actually increment
+updateIntensity(){}
+//If 1, en passant, if 2 promotion, other numbers- other effects
+Action(){}
