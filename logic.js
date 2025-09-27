@@ -180,6 +180,48 @@ function analyzeMove(move) {
 
   updateIntensity(intensity);  
 }
+
+let player;
+
+// Extract video ID from a YouTube URL
+function getYouTubeID(url) {
+  const regex = /(?:v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+// Create player when API is ready
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    height: '300',
+    width: '300',
+    videoId: '', // empty initially
+    events: { 'onReady': onPlayerReady }
+  });
+}
+
+// Called when player is ready
+function onPlayerReady(event) {
+  const slider = document.getElementById('volumeSlider');
+  slider.addEventListener('input', () => {
+    player.setVolume(slider.value);
+  });
+
+  // Load video when user clicks button
+  document.getElementById('loadBtn').addEventListener('click', () => {
+    const url = document.getElementById('youtubeLink').value;
+    const videoId = getYouTubeID(url);
+    if (videoId) {
+      player.loadVideoById(videoId);
+      player.mute();            // optional: autoplay muted
+      player.playVideo();
+    } else {
+      alert('Invalid YouTube link!');
+    }
+  });
+}
+
+
 // //certain game states, it should change
 // updateMusic(){}
 // // For intensity, if between 3 and 6 we subtract//// or we subtract 5 from total score, but if below certain point we actually increment

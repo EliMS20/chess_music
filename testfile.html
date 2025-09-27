@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Player Control</title>
+  <style>
+    body {
+      background: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #player {
+      margin-bottom: 20px;
+    }
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    input[type="text"] {
+      width: 250px;
+      padding: 5px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      border: none;
+    }
+    button {
+      padding: 5px 10px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #1db954;
+      color: white;
+    }
+    input[type="range"] {
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+
+  <div class="controls">
+    <input type="text" id="videoLink" placeholder="Paste YouTube link here">
+    <button onclick="loadVideo()">Load</button><br>
+    <button onclick="player.playVideo()">▶ Play</button>
+    <button onclick="player.pauseVideo()">⏸ Pause</button><br>
+    Volume: <input type="range" min="0" max="100" value="50" id="volumeSlider">
+  </div>
+
+  <script>
+    let player;
+
+    // Load YouTube IFrame API
+    let tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    // Called when API is ready
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '360',
+        width: '640',
+        videoId: '', // Empty until user loads
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+
+    function onPlayerReady() {
+      document.getElementById("volumeSlider").addEventListener("input", function() {
+        player.setVolume(this.value);
+      });
+    }
+
+    function loadVideo() {
+      let url = document.getElementById("videoLink").value;
+      let videoId = extractVideoID(url);
+      if (videoId) {
+        player.loadVideoById(videoId);
+      } else {
+        alert("Invalid YouTube link!");
+      }
+    }
+
+    // Extracts the YouTube Video ID from a full URL
+    function extractVideoID(url) {
+      let regex = /(?:youtube\.com\/.*v=|youtu\.be\/)([^&\n?#]+)/;
+      let match = url.match(regex);
+      return match ? match[1] : null;
+    }
+  </script>
+</body>
+</html>
