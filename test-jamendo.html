@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jamendo API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .result { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .error { background-color: #ffebee; color: #c62828; }
+        .success { background-color: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Jamendo API Test</h1>
+    
+    <button onclick="testJamendoAPI()">Test Jamendo API</button>
+    <button onclick="testPlayTrack()">Test Play Track</button>
+    <button onclick="clearResults()">Clear Results</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        const jamendoClientId = '6dc7340c';
+        const jamendoBaseUrl = 'https://api.jamendo.com/v3.0';
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            results.appendChild(div);
+            console.log(message);
+        }
+        
+        async function testJamendoAPI() {
+            log('🔍 Testing Jamendo API connection...');
+            
+            try {
+                // Try multiple search strategies
+                const searchUrl = `${jamendoBaseUrl}/tracks/?client_id=${jamendoClientId}&format=json&limit=10&search=carvine&include=musicinfo&audiodlformat=mp31`;
+                log(`📡 Fetching: ${searchUrl}`);
+                
+                const response = await fetch(searchUrl);
+                log(`📊 Response status: ${response.status}`);
+                
+                const data = await response.json();
+                log(`📈 API Response received`, 'success');
+                log(`🎯 Found ${data.results ? data.results.length : 0} tracks`);
+                
+                if (data.results && data.results.length > 0) {
+                    log('📋 All Carvine tracks found:');
+                    data.results.forEach((track, i) => {
+                        log(`  ${i+1}. ${track.name} by ${track.artist_name}`);
+                    });
+                    
+                    // Find Epic Battle track by Carvine
+                    const epicBattleTrack = data.results.find(track => 
+                        track.artist_name.toLowerCase().includes('carvine') && 
+                        track.name.toLowerCase().includes('epic')
+                    );
+                    
+                    if (epicBattleTrack) {
+                        log(`🎉 FOUND EPIC BATTLE BY CARVINE!`, 'success');
+                        log(`🎵 Track: ${epicBattleTrack.name}`);
+                        log(`👤 Artist: ${epicBattleTrack.artist_name}`);
+                        log(`🔗 Audio URL: ${epicBattleTrack.audio}`);
+                        log(`⏱️ Duration: ${epicBattleTrack.duration}s`);
+                        
+                        // Store track globally for testing
+                        window.testTrack = epicBattleTrack;
+                        
+                    } else {
+                        // Use first Carvine track as fallback
+                        const firstCarvineTrack = data.results.find(track => 
+                            track.artist_name.toLowerCase().includes('carvine')
+                        );
+                        
+                        if (firstCarvineTrack) {
+                            log(`🎵 Using first Carvine track: ${firstCarvineTrack.name}`, 'success');
+                            window.testTrack = firstCarvineTrack;
+                        } else {
+                            log('❌ No Carvine tracks found in results');
+                        }
+                    }
+                } else {
+                    log('❌ No results found', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testPlayTrack() {
+            if (!window.testTrack) {
+                log('❌ No track loaded. Run "Test Jamendo API" first.', 'error');
+                return;
+            }
+            
+            log('🎵 Testing audio playback...');
+            
+            try {
+                const audio = new Audio(window.testTrack.audio);
+                audio.volume = 0.3; // Low volume for testing
+                
+                audio.addEventListener('loadeddata', () => {
+                    log('✅ Audio loaded successfully!', 'success');
+                });
+                
+                audio.addEventListener('canplaythrough', () => {
+                    log('✅ Audio ready to play!', 'success');
+                });
+                
+                audio.addEventListener('error', (e) => {
+                    log(`❌ Audio error: ${e.message}`, 'error');
+                });
+                
+                audio.addEventListener('play', () => {
+                    log('▶️ Audio started playing!', 'success');
+                });
+                
+                log(`🎶 Attempting to play: ${window.testTrack.name}`);
+                await audio.play();
+                
+                // Stop after 5 seconds
+                setTimeout(() => {
+                    audio.pause();
+                    log('⏸️ Audio stopped after 5 seconds');
+                }, 5000);
+                
+            } catch (error) {
+                log(`❌ Playback error: ${error.message}`, 'error');
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            log('🚀 Page loaded. Click "Test Jamendo API" to start.');
+        });
+    </script>
+</body>
+</html>
