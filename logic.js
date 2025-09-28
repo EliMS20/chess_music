@@ -87,9 +87,27 @@ function updateStatus () {
     if (game.in_check()) statusHTML = whosTurn + ' is in check! '
     statusHTML = statusHTML + whosTurn + ' to move.'
   } else if (game.in_checkmate() && game.turn() === 'w') {
-    statusHTML = 'Game over: white is in checkmate. Black wins!'
+    statusHTML = '🎯 CHECKMATE! Black wins! Epic Battle Complete!'
+    showGameOverModal('Black wins!', 'Black has achieved checkmate! The epic battle is complete!')
+    // Trigger epic 10/10 intensity for checkmate
+    if (window.updateMusicFromMove) {
+      window.updateMusicFromMove({
+        captured: 'k', // King captured
+        san: 'CHECKMATE',
+        piece: 'k'
+      });
+    }
   } else if (game.in_checkmate() && game.turn() === 'b') {
-    statusHTML = 'Game over: black is in checkmate. White wins!'
+    statusHTML = '🎯 CHECKMATE! White wins! Epic Battle Complete!'
+    showGameOverModal('White wins!', 'White has achieved checkmate! The epic battle is complete!')
+    // Trigger epic 10/10 intensity for checkmate
+    if (window.updateMusicFromMove) {
+      window.updateMusicFromMove({
+        captured: 'k', // King captured
+        san: 'CHECKMATE',
+        piece: 'k'
+      });
+    }
   } else if (game.in_stalemate() && game.turn() === 'w') {
     statusHTML = 'Game is drawn. White is stalemated.'
   } else if (game.in_stalemate() && game.turn() === 'b') {
@@ -156,3 +174,30 @@ document.addEventListener('DOMContentLoaded', function() {
   // Make function globally available
   window.resetGame = resetGame
 })
+
+// Game Over Modal Functions
+function showGameOverModal(winner, message) {
+  const modal = document.getElementById('gameOverModal')
+  const messageEl = document.getElementById('gameOverMessage')
+  
+  if (modal && messageEl) {
+    messageEl.innerHTML = `<strong>${winner}</strong><br><span class="text-gray-600">${message}</span>`
+    modal.classList.remove('hidden')
+    
+    // Add dramatic effect
+    setTimeout(() => {
+      modal.style.animation = 'fadeIn 0.5s ease-in-out'
+    }, 100)
+  }
+}
+
+function hideGameOverModal() {
+  const modal = document.getElementById('gameOverModal')
+  if (modal) {
+    modal.classList.add('hidden')
+  }
+}
+
+// Make modal functions globally available
+window.showGameOverModal = showGameOverModal
+window.hideGameOverModal = hideGameOverModal

@@ -1,9 +1,11 @@
 {
   "name": "chess_music",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Chess game with Epic Battle music by Carvine",
+  "main": "chess-board.html",
   "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Open chess-board.html in browser'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,9 +22,5 @@
   "dependencies": {
     "chess.js": "^1.4.0"
   },
-  "devDependencies": {
-    "daisyui": "^5.1.24",
-    "parcel": "^2.16.0",
-    "tailwindcss": "^4.1.13"
-  }
+  "devDependencies": {}
 }
