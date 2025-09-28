@@ -1,0 +1,21 @@
+
+  /* make the button rectangular with no rounded corners */
+  #loadBtn {
+    border-radius: 0;       /* removes rounded corners */
+    padding: 8px 14px;      /* a bit of space inside */
+    background: #0066ff;    /* your color */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* hide the placeholder text but still leave it accessible */
+  #youtubeLink::placeholder {
+    color: transparent;     /* visually hides it */
+  }
+
+  /* (optional) add a visible border to the input for clarity */
+  #youtubeLink {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }

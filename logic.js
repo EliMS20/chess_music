@@ -2,6 +2,7 @@
 // https://github.com/jhlywa/chess.js
 
 const game = new Chess()
+let current_volume = 0;
 
 const boardConfig = {
   draggable: true,
@@ -55,6 +56,12 @@ function onDrop (dropEvt) {
     if (window.updateMusicFromMove) {
       window.updateMusicFromMove(move);
     }
+
+	console.log(player.getPlayerState())
+	if (player.getPlayerState() == 2){
+		player.playVideo();
+	}
+
 	// analyzeMove(move);
 	analyzePosition(game.fen());
   } else {
@@ -83,13 +90,22 @@ async function analyzePosition(fen) {
       if ("cp" in pv) {
         
         let score = pv.cp;
+		if (score < 0){
+			score *= -1;
+		}
+		console.log(score);
+		player.setVolume(score);
+		player.setPlaybackRate(1 + score/1000);
         console.log("Evaluation:", score / 100.0, "pawns");
         //Music changes based on score, eg for low eval/blunder
         // updateMusic(score); // find better way too change music
         //Higher score means more intensity
-        // updateIntensity(score / 9);
+        updateIntensity(score / 9);
       } else if ("mate" in pv) {
         // mate = forced mate in X
+		console.log(pv.mate);
+		player.setVolume(100);
+		player.setPlaybackRate(2);
         console.log("Mate in", pv.mate);
         //Intensity- volume + speed
         // updateIntensity(100/pv.mate);
@@ -193,8 +209,8 @@ function getYouTubeID(url) {
 // Create player when API is ready
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
-    height: '300',
-    width: '300',
+    height: '0',
+    width: '0',
     videoId: '', // empty initially
     events: { 'onReady': onPlayerReady }
   });
@@ -202,10 +218,6 @@ function onYouTubeIframeAPIReady() {
 
 // Called when player is ready
 function onPlayerReady(event) {
-  const slider = document.getElementById('volumeSlider');
-  slider.addEventListener('input', () => {
-    player.setVolume(slider.value);
-  });
 
   // Load video when user clicks button
   document.getElementById('loadBtn').addEventListener('click', () => {
@@ -213,8 +225,9 @@ function onPlayerReady(event) {
     const videoId = getYouTubeID(url);
     if (videoId) {
       player.loadVideoById(videoId);
-      player.mute();            // optional: autoplay muted
-      player.playVideo();
+	  console.log(player.getYouTubeID());
+    //   player.pauseVideo();
+	  	player.setVolume(current_volume);
     } else {
       alert('Invalid YouTube link!');
     }
